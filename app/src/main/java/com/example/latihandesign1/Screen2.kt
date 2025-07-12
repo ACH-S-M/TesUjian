@@ -1,5 +1,6 @@
 package com.example.latihandesign1
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -48,12 +49,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.latihandesign1.ui.theme.Latihandesign1Theme
+import dagger.hilt.android.AndroidEntryPoint
 
 class Screen2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +72,7 @@ class Screen2 : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (getname != null) {
-                        ScreenWelcome(getname)
+                        Screen(nama = getname)
                     }
                 }
             }
@@ -79,7 +84,7 @@ class Screen2 : ComponentActivity() {
 @Composable
 fun Screen(
     modifier: Modifier = Modifier,
-    nama: String
+    nama: String,
 ) {
     // Gradient background
     val brush = Brush.verticalGradient(
@@ -89,9 +94,10 @@ fun Screen(
             Color(0xFFf093fb)
         )
     )
-
-    var selectedUser by remember { mutableStateOf("") }
-
+    val context = LocalContext.current
+    val intent = Intent(context,Screen3::class.java)
+    val viewModel: UserViewModel = viewModel()
+    val selectedList = viewModel.selectedUserName
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -104,19 +110,7 @@ fun Screen(
                 .padding(24.dp)
         ) {
 
-            // Header Section
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White.copy(alpha = 0.95f)
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
 
-            }
 
             // Selamat Datang Header atas
             Card(
@@ -193,58 +187,36 @@ fun Screen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-
+                    // ✨ Tampilkan konten dinamis berdasarkan selectedName
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = null,
-                            modifier = Modifier.size(64.dp),
-                            tint = Color(0xFF764ba2)
-                        )
-
-                        Text(
-                            text = "Selected User",
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF2c3e50),
-                            textAlign = TextAlign.Center
-                        )
-
-                        if (selectedUser.isNotEmpty()) {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFFE8F5E8)
-                                )
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.CheckCircle,
-                                        contentDescription = null,
-                                        tint = Color(0xFF4CAF50)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = selectedUser,
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = Color(0xFF2E7D32)
-                                    )
-                                }
+                    ) { if (selectedList.isEmpty()){
+                       Column(verticalArrangement = Arrangement.Center) {
+                           Icon(
+                               imageVector = Icons.Default.Person,
+                               contentDescription = null,
+                               modifier = Modifier.size(64.dp),
+                               tint = Color(0xFF764ba2)
+                           )
+                           Text(text = "Tambah User")
+                       }
+                    }else {
+                        Column{
+                            Text("User yang dipilih:", fontWeight = FontWeight.Bold)
+                            selectedList.forEach {
+                                Text("• $it")
                             }
                         }
                     }
+                    }
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Tombol tetap di bawah
                     Button(
                         onClick = {
-                            selectedUser = "John Doe"
+                            context.startActivity(intent)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -293,6 +265,7 @@ fun Screen(
         }
     }
 }
+
 
 
 @Preview(showBackground = true)

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Latihandesign1"
         tools:targetApi="31">
+        <activity
+            android:name=".UserItem"
+            android:exported="false"
+            android:label="@string/title_activity_user_item"
+            android:theme="@style/Theme.Latihandesign1" />
+        <activity
+            android:name=".Screen3"
+            android:exported="false"
+            android:label="@string/title_activity_screen3"
+            android:theme="@style/Theme.Latihandesign1" />
         <activity
             android:name=".Screen2"
             android:exported="false"
