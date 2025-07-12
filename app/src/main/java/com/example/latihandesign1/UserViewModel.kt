@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +25,8 @@ class UserViewModel:ViewModel(){
     var isEndReached by mutableStateOf(false)
     private set
 
-    var selectedUserName = mutableStateListOf<String>()
-    private set
+    var selectedUserName by mutableStateOf<List<String>>(emptyList())
+        private set
     fun getUsers(refresh:Boolean= false){
         viewModelScope.launch {
             if(refresh){
@@ -53,7 +54,7 @@ class UserViewModel:ViewModel(){
     fun selectuser(user: User){
         val fullname =  "${user.first_name} ${user.last_name}"
         if (!selectedUserName.contains(fullname)) {
-            selectedUserName.add(fullname)
+            selectedUserName = selectedUserName + fullname
         }
     }
 

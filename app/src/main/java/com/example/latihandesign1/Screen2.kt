@@ -40,6 +40,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +57,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.latihandesign1.ui.theme.Latihandesign1Theme
 import dagger.hilt.android.AndroidEntryPoint
@@ -95,9 +98,16 @@ fun Screen(
         )
     )
     val context = LocalContext.current
-    val intent = Intent(context,Screen3::class.java)
-    val viewModel: UserViewModel = viewModel()
+    val activity = context as? ComponentActivity
+        ?: throw IllegalStateException("Not in an Activity context")
+    val viewModel: UserViewModel = remember {
+        ViewModelProvider(activity)[UserViewModel::class.java]
+    }
     val selectedList = viewModel.selectedUserName
+
+
+    val intent = remember { Intent(context, Screen3::class.java) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -192,7 +202,7 @@ fun Screen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) { if (selectedList.isEmpty()){
-                       Column(verticalArrangement = Arrangement.Center) {
+                       Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                            Icon(
                                imageVector = Icons.Default.Person,
                                contentDescription = null,

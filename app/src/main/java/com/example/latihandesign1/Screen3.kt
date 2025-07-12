@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.example.latihandesign1.ui.theme.Latihandesign1Theme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -41,23 +42,24 @@ class Screen3 : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Screen3Prev()
+                    UserList {
+                        finish()
+                    }
                 }
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun Screen3Prev() {
-    Latihandesign1Theme {
-        UserList(viewModel = UserViewModel(), onBack = {})
-    }
-}
+
 
 @Composable
-fun UserList(viewModel: UserViewModel, onBack: () -> Unit) {
+fun UserList( onBack: () -> Unit) {
+    val context = LocalContext.current
+    val activity = context as? ComponentActivity
+    val viewModel: UserViewModel = activity?.let {
+        ViewModelProvider(it)[UserViewModel::class.java]
+    } ?: return
     val isRefresh = viewModel.isRefresh
     val users = viewModel.user
     val isLoading = viewModel.isLoading

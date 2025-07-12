@@ -72,7 +72,7 @@ fun UserItem(user: User, onClick: () -> Unit) {
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column{
-            Text("${user.first_name} ${user.last_name}", fontWeight = FontWeight.Bold)
+            Text("${user.first_name} ${user.last_name}", fontWeight = FontWeight.Bold, color = Color.Black)
             Text(user.email, color = Color.Gray)
         }
     }
